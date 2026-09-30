@@ -3,9 +3,8 @@ import { Picture } from 'astro:assets';
 import Icon from '../ui/Icon.astro';
 import { profile } from '../../data/profile';
 import { projects } from '../../data/projects';
-// Derived transparent cutout (original photo untouched). Generated from
-// assets/profile/Portfolio_site_img1.png; see assets/profile/processed/README.md.
-import heroCutout from '@assets/profile/processed/hero-cutout.png';
+// Deployment-safe processed cutout; the original source photograph remains untouched.
+import heroCutout from '../../assets/profile/hero-cutout.png';
 ---
 
 <section class="hero" aria-labelledby="hero-title">
