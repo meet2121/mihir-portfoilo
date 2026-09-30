@@ -1,0 +1,12 @@
+{
+  "name": "Mihir Brahmaniya · AI Engineering Portfolio",
+  "short_name": "Mihir · AI",
+  "description": "Interactive AI and data science systems portfolio.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090d",
+  "theme_color": "#07090d",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

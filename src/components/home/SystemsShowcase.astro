@@ -1,0 +1,19 @@
+---
+import { projects } from '../../data/projects';
+---
+<section class="systems section" aria-labelledby="systems-heading">
+  <div class="container">
+    <header class="section-head"><p class="eyebrow">Interactive systems showcase</p><h2 id="systems-heading">Follow the data, not the buzzwords.</h2><p class="lead">Each system exposes its inputs, processing, validation and review points. Select a stage to inspect what it does.</p></header>
+    <div class="systems__grid">
+      {projects.map((project) => <article class="system-card card">
+        <div class="system-card__top"><div><span class="mono system-card__num">0{projects.indexOf(project)+1}</span><h3>{project.name}</h3></div><a href={`/projects/${project.slug}#demo`}>Try demo →</a></div>
+        <div class="system-card__flow" aria-label={`${project.name} stages`}>{project.pipeline.slice(0,5).map((stage, i) => <details name={`pipeline-${project.slug}`} open={i===0}><summary><span>{String(i+1).padStart(2,'0')}</span>{stage.label}</summary><p><strong>{stage.concept}</strong>{stage.summary}</p></details>)}</div>
+      </article>)}
+    </div>
+  </div>
+</section>
+<style>
+  .systems{border-block:1px solid var(--border-subtle);background:linear-gradient(var(--grid-line) 1px,transparent 1px) 0 0/32px 32px,linear-gradient(90deg,var(--grid-line) 1px,transparent 1px) 0 0/32px 32px,var(--bg-elevated)}
+  .systems__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4)}
+  .system-card{padding:var(--space-5);overflow:hidden}.system-card__top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:var(--space-5)}.system-card__top>div{display:flex;align-items:center;gap:.75rem}.system-card__num{color:var(--accent);font-size:.7rem}.system-card h3{font-size:var(--text-lg)}.system-card__top a{color:var(--accent);font-size:.75rem;font-weight:700}.system-card__flow{display:flex;gap:.45rem;overflow:auto;padding:.2rem 0 .75rem}.system-card details{min-width:7.2rem}.system-card summary{display:grid;gap:.25rem;padding:.7rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);cursor:pointer;font-size:.7rem;font-weight:700;list-style:none}.system-card summary span{font:500 .58rem var(--font-mono);color:var(--text-subtle)}.system-card details[open] summary{border-color:var(--accent-line);color:var(--accent);box-shadow:var(--glow-accent)}.system-card details p{width:14rem;padding:.65rem;color:var(--text-muted);font-size:.67rem}.system-card details p strong{display:block;color:var(--text);margin-bottom:.2rem}@media(max-width:750px){.systems__grid{grid-template-columns:1fr}}
+</style>

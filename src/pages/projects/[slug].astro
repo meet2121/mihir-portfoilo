@@ -1,0 +1,202 @@
+---
+// Project detail shell. Phase 8 fills in Solution, Workflow, Results, Architecture and Stack;
+// this phase establishes the route, hero, problem, role and the demo mount point.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/ui/Icon.astro';
+import PipelinePreview from '../../components/project/PipelinePreview.astro';
+import DemoSlot from '../../components/project/DemoSlot.astro';
+import { projects, ROLE_STATEMENT, type Project } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const index = projects.findIndex((p) => p.slug === project.slug);
+const next = projects[(index + 1) % projects.length];
+const contributions: Record<Project['slug'], string[]> = {
+  'accounting-ai': ['Document ingestion, page rendering and OCR orchestration', 'Structured extraction contracts and evidence verification', 'Deterministic accounting checks, human review and Excel output', 'Unit, regression and golden-document benchmark suites'],
+  'finsight-ai': ['Statement parsing, detection and account classification', 'Accounting-equation checks and multi-rule analysis', 'Materiality-aware variance, ratios and risk scoring', 'Dashboard, exports and deterministic summary fallback'],
+  'ledger-flash': ['Similarity-first retrieval and resilient batch classification', 'Approve, reject and correct review workflow', 'Reviewer-confirmed learning memory and audit history', 'Import, reporting and tenant-isolated data handling'],
+  scrapeforge: ['Browser-session and report extraction workflow', 'Financial-year, date, pagination and checkpoint handling', 'Canonical data model, matching and difference classification', 'Readiness scoring, progress events and recovery tools'],
+};
+const outcomes: Record<Project['slug'], string> = {
+  'accounting-ai': 'The portfolio demo produces a structured invoice record, calculates every line, checks tax and total consistency, and routes missing or conflicting fields to review.',
+  'finsight-ai': 'The portfolio demo calculates revenue, expense, surplus, margin and budget variance, then explains each risk with the observed value, baseline and rule.',
+  'ledger-flash': 'The portfolio demo classifies narrations with approved-memory similarity and local features, exposes confidence and reasoning, and learns corrections for the current session.',
+  scrapeforge: 'The portfolio demo filters and paginates synthetic records, removes exact duplicates, reconciles two datasets and derives its readiness grade from the computed match rate.',
+};
+---
+
+<BaseLayout title={project.name} description={project.tagline}>
+  <section class="project-hero" aria-labelledby="project-title">
+    <div class="container">
+      <a class="back-link" href="/#projects">
+        <Icon name="arrow-right" size={16} class="back-link__icon" />
+        All projects
+      </a>
+      <div class="project-hero__meta" data-animate>
+        <span class="chip chip--accent">{project.category}</span>
+        <span class="chip">Industry Project · NoBrokerHood</span>
+      </div>
+      <h1 id="project-title" class="project-hero__title" data-animate style="--delay: 60ms">{project.name}</h1>
+      <p class="lead project-hero__tagline" data-animate style="--delay: 120ms">{project.tagline}</p>
+      <p class="project-hero__role" data-animate style="--delay: 180ms">
+        <span class="eyebrow">My role</span>
+        <span>{ROLE_STATEMENT}</span>
+      </p>
+      <div class="cluster" data-animate style="--delay: 240ms">
+        <a class="btn btn--primary" href="#overview">Explore <Icon name="arrow-down" /></a>
+        <a class="btn" href="#demo"><Icon name="play" size={14} /> Try Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" id="overview" aria-labelledby="problem-heading">
+    <div class="container project-overview">
+      <div class="stack">
+        <p class="eyebrow">Problem</p>
+        <h2 id="problem-heading" class="visually-hidden">Problem</h2>
+        <p class="project-overview__problem">{project.problem}</p>
+      </div>
+      <div class="card project-overview__pipeline">
+        <p class="eyebrow">System pipeline</p>
+        <PipelinePreview stages={project.pipeline} label={`${project.name} pipeline`} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="contribution-heading">
+    <div class="container project-detail-grid">
+      <div><p class="eyebrow">Approach</p><h2 id="contribution-heading">Validation is part of the system, not an afterthought.</h2><p class="lead">{project.shortDescription} The workflow keeps inputs, decisions and exceptions visible so that a reviewer can understand how the output was reached.</p></div>
+      <article class="card contribution"><p class="eyebrow">My contribution</p><ul>{contributions[project.slug].map((item) => <li>{item}</li>)}</ul></article>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-label="Interactive demo">
+    <div class="container">
+      <DemoSlot projectName={project.name} focus={project.demoFocus} slug={project.slug} />
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="result-heading">
+    <div class="container project-lower">
+      <article class="card result-card"><p class="eyebrow">Result</p><h2 id="result-heading">A result that can be inspected.</h2><p>{outcomes[project.slug]}</p></article>
+      <article class="card architecture"><p class="eyebrow">Technical architecture</p><h2>Stage-by-stage system design</h2><ol>{project.pipeline.map((stage, i) => <li><span class="mono">{String(i+1).padStart(2,'0')}</span><div><strong>{stage.label} · {stage.concept}</strong><p>{stage.input} → {stage.output}</p></div></li>)}</ol></article>
+      <article class="card stack-card"><p class="eyebrow">Tech stack</p><h2>Tools used in the production system</h2><ul role="list">{project.coreTech.map((tech) => <li class="chip">{tech}</li>)}</ul><p class="stack-card__note">The portfolio demo itself is static TypeScript running locally in the browser with synthetic data and no API key.</p></article>
+      <aside class="confidentiality"><Icon name="lock" size={16}/><p><strong>Confidentiality by design.</strong> Production source code, customer data, private infrastructure, prompts, mappings and configuration are not exposed.</p></aside>
+    </div>
+  </section>
+
+  <nav class="section section--tight" aria-label="Next project">
+    <div class="container">
+      <a class="card card--interactive next-project" href={`/projects/${next.slug}`}>
+        <span class="eyebrow">Next project</span>
+        <span class="next-project__name">{next.name}</span>
+        <Icon name="arrow-right" size={22} />
+      </a>
+    </div>
+  </nav>
+</BaseLayout>
+
+<style>
+  .project-hero {
+    padding-block: clamp(2rem, 1rem + 4vw, 5rem) var(--space-8);
+    background:
+      radial-gradient(40rem 20rem at 85% 0%, var(--backdrop-glow), transparent 70%);
+  }
+
+  .project-hero .container {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: start;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .back-link:hover {
+    color: var(--text);
+  }
+
+  .back-link :global(.back-link__icon) {
+    transform: rotate(180deg);
+  }
+
+  .project-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project-hero__title {
+    font-size: var(--text-3xl);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.035em;
+  }
+
+  .project-hero__tagline {
+    font-size: var(--text-lg);
+  }
+
+  .project-hero__role {
+    display: grid;
+    gap: var(--space-1);
+    max-width: 62ch;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--accent);
+  }
+
+  .section--tight {
+    padding-block: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  }
+
+  .project-overview {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 900px) {
+    .project-overview {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  .project-overview__problem {
+    font-size: var(--text-md);
+    color: var(--text-muted);
+    max-width: 60ch;
+  }
+
+  .project-overview__pipeline {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-6);
+  }
+
+  .next-project {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-6) var(--space-8);
+  }
+
+  .next-project__name {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    margin-right: auto;
+  }
+  .project-detail-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-8);align-items:start}.project-detail-grid h2,.project-lower h2{margin:.75rem 0 1rem;font-size:var(--text-xl)}.contribution{padding:var(--space-6)}.contribution ul{display:grid;gap:.75rem;margin-top:1rem;padding-left:1.25rem;color:var(--text-muted)}.contribution li::marker{color:var(--accent)}.project-lower{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-5)}.result-card,.architecture,.stack-card{padding:var(--space-6)}.result-card p:last-child,.stack-card__note{color:var(--text-muted)}.architecture{grid-row:span 2}.architecture ol{display:grid;gap:.65rem;padding:0;list-style:none}.architecture li{display:grid;grid-template-columns:auto 1fr;gap:.75rem;padding:.7rem;border:1px solid var(--border-subtle);border-radius:var(--radius);background:var(--surface-2)}.architecture li>span{color:var(--accent);font-size:.65rem}.architecture li p{color:var(--text-subtle);font-size:.72rem}.stack-card ul{display:flex;flex-wrap:wrap;gap:.5rem;padding:0}.stack-card__note{margin-top:1rem;font-size:.75rem}.confidentiality{grid-column:1/-1;display:flex;gap:.75rem;padding:1rem;border:1px solid var(--border-subtle);border-radius:var(--radius);color:var(--text-muted);font-size:.8rem}.confidentiality :global(svg){flex:none;color:var(--accent);margin-top:.2rem}@media(max-width:750px){.project-detail-grid,.project-lower{grid-template-columns:1fr}.architecture{grid-row:auto}}
+</style>

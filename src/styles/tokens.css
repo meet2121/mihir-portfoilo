@@ -1,0 +1,167 @@
+/*
+ * Design tokens
+ * Dark is the primary theme. Light is opt-in through the theme toggle
+ * (html[data-theme="light"]) and uses the same token names.
+ *
+ * Breakpoints (used literally in media queries; custom properties can't be used there):
+ *   sm  640px   – large phones / small tablets
+ *   md  900px   – tablets, stacked → split layouts
+ *   lg  1200px  – laptops and up
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ── Surfaces: layered from page to raised elements ── */
+  --bg: #07090d;
+  --bg-elevated: #0b0e14;
+  --surface-1: #0f131a;
+  --surface-2: #141a23;
+  --surface-3: #1b222d;
+  --surface-glass: rgb(13 17 24 / 0.72);
+  --surface-inverse: #e9edf2;
+
+  /* ── Borders ── */
+  --border-subtle: rgb(255 255 255 / 0.06);
+  --border: rgb(255 255 255 / 0.1);
+  --border-strong: rgb(255 255 255 / 0.18);
+
+  /* ── Text ── */
+  --text: #e8edf3;
+  --text-muted: #a3aebb;
+  --text-subtle: #7f8a99;
+  --text-inverse: #0b0e14;
+
+  /* ── Accent (live flow, primary actions) ── */
+  --accent: #5ad8c8;
+  --accent-strong: #7ae6d8;
+  --accent-soft: rgb(90 216 200 / 0.12);
+  --accent-line: rgb(90 216 200 / 0.35);
+  --on-accent: #04110f;
+
+  /* ── Secondary accent (AI / model stages) ── */
+  --ai: #8ea8ff;
+  --ai-soft: rgb(142 168 255 / 0.12);
+
+  /* ── Status (same vocabulary as the pipelines) ── */
+  --ok: #56d68a;
+  --ok-soft: rgb(86 214 138 / 0.12);
+  --review: #f2b45a;
+  --review-soft: rgb(242 180 90 / 0.12);
+  --fail: #f47a7a;
+  --fail-soft: rgb(244 122 122 / 0.12);
+
+  /* ── Typography ── */
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: clamp(1.2rem, 1.1rem + 0.4vw, 1.375rem);
+  --text-xl: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem);
+  --text-2xl: clamp(1.875rem, 1.5rem + 1.5vw, 2.625rem);
+  --text-3xl: clamp(2.5rem, 1.8rem + 3vw, 4.25rem);
+
+  --leading-tight: 1.08;
+  --leading-snug: 1.3;
+  --leading-body: 1.65;
+  --tracking-tight: -0.025em;
+  --tracking-wide: 0.08em;
+
+  /* ── Spacing (4px base) ── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --section-y: clamp(4rem, 3rem + 5vw, 7.5rem);
+
+  /* ── Layout ── */
+  --container: 1200px;
+  --container-narrow: 760px;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+  --header-h: 64px;
+
+  /* ── Radii ── */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  /* ── Elevation ── */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 10px 30px -12px rgb(0 0 0 / 0.6);
+  --shadow-lg: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 30px 60px -20px rgb(0 0 0 / 0.75);
+  --glow-accent: 0 0 0 1px var(--accent-line), 0 0 24px -4px rgb(90 216 200 / 0.35);
+
+  /* ── Focus ── */
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  /* ── Motion ── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 480ms;
+
+  /* ── Hero backdrop ── */
+  --grid-line: rgb(255 255 255 / 0.035);
+  --backdrop-glow: rgb(90 216 200 / 0.08);
+  --photo-card: #cfd4db;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f6f7f9;
+  --bg-elevated: #ffffff;
+  --surface-1: #ffffff;
+  --surface-2: #f1f3f6;
+  --surface-3: #e7eaef;
+  --surface-glass: rgb(255 255 255 / 0.78);
+  --surface-inverse: #0f131a;
+
+  --border-subtle: rgb(15 23 42 / 0.06);
+  --border: rgb(15 23 42 / 0.1);
+  --border-strong: rgb(15 23 42 / 0.2);
+
+  --text: #0f1720;
+  --text-muted: #4a5563;
+  --text-subtle: #5f6b7a;
+  --text-inverse: #f6f7f9;
+
+  --accent: #0e8f82;
+  --accent-strong: #0a7469;
+  --accent-soft: rgb(14 143 130 / 0.1);
+  --accent-line: rgb(14 143 130 / 0.35);
+  --on-accent: #ffffff;
+
+  --ai: #3d5fd9;
+  --ai-soft: rgb(61 95 217 / 0.1);
+
+  --ok: #1d9152;
+  --ok-soft: rgb(29 145 82 / 0.1);
+  --review: #a86508;
+  --review-soft: rgb(168 101 8 / 0.1);
+  --fail: #c53a3a;
+  --fail-soft: rgb(197 58 58 / 0.1);
+
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.08);
+  --shadow: 0 1px 2px rgb(15 23 42 / 0.05), 0 10px 30px -14px rgb(15 23 42 / 0.2);
+  --shadow-lg: 0 2px 4px rgb(15 23 42 / 0.05), 0 30px 60px -24px rgb(15 23 42 / 0.28);
+  --glow-accent: 0 0 0 1px var(--accent-line), 0 0 20px -6px rgb(14 143 130 / 0.3);
+
+  --grid-line: rgb(15 23 42 / 0.045);
+  --backdrop-glow: rgb(14 143 130 / 0.07);
+  --photo-card: #d9dde3;
+}

@@ -1,0 +1,569 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from '../ui/Icon.astro';
+import { profile } from '../../data/profile';
+import { projects } from '../../data/projects';
+// Derived transparent cutout (original photo untouched). Generated from
+// assets/profile/Portfolio_site_img1.png; see assets/profile/processed/README.md.
+import heroCutout from '@assets/profile/processed/hero-cutout.png';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__backdrop" aria-hidden="true"></div>
+
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="hero__badge" data-animate>
+        <span class="status-dot" data-status="live"></span>
+        Industry AI systems · {profile.company}
+      </p>
+
+      <h1 id="hero-title" class="hero__title" data-animate style="--delay: 60ms">
+        {profile.name}
+      </h1>
+
+      <p class="hero__role mono" data-animate style="--delay: 120ms">
+        {profile.role} <span aria-hidden="true">·</span> {profile.discipline}
+      </p>
+
+      <p class="hero__statement" data-animate style="--delay: 180ms">
+        {profile.heroStatement}
+      </p>
+
+      <div class="hero__actions" data-animate style="--delay: 240ms">
+        <a class="btn btn--primary" href="#projects">
+          Explore Projects
+          <Icon name="arrow-down" />
+        </a>
+        <a class="btn" href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+          <Icon name="linkedin" />
+          LinkedIn
+          <span class="visually-hidden">(opens in a new tab)</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Visual: transparent cutout. The pointing fingertip sits at the cutout's right edge
+         (98.9% x, 49.8% y), and the "Currently" card is placed just beyond it, so the card
+         can never cover the face or the finger. All geometry derives from --person-h. -->
+    <div class="hero__media">
+      <div class="hero__stage">
+        <div class="hero__halo" aria-hidden="true">
+          <svg viewBox="0 0 200 200" class="hero__orbit">
+            <circle cx="100" cy="100" r="96" class="hero__orbit-ring" />
+            <circle cx="100" cy="100" r="74" class="hero__orbit-ring hero__orbit-ring--inner" />
+            <circle cx="100" cy="4" r="2.2" class="hero__orbit-node hero__orbit-node--live" />
+            <circle cx="183" cy="52" r="1.6" class="hero__orbit-node" />
+            <circle cx="17" cy="148" r="1.6" class="hero__orbit-node" />
+            <circle cx="28" cy="44" r="1.6" class="hero__orbit-node" />
+          </svg>
+        </div>
+
+        <div class="hero__person">
+          <Picture
+            src={heroCutout}
+            alt={`${profile.name} pointing toward the current-role card`}
+            formats={['avif', 'webp']}
+            fallbackFormat="png"
+            quality={82}
+            widths={[380, 560, 790]}
+            sizes="(min-width: 1100px) 500px, (min-width: 640px) 390px, 290px"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+
+        <span class="hero__pointer" aria-hidden="true"></span>
+
+        <aside class="hero__now glass" aria-label="Current role">
+          <p class="hero__now-label">
+            <span class="status-dot" data-status="live"></span>
+            <span class="mono">Currently</span>
+          </p>
+          <p class="hero__now-role">{profile.role}</p>
+          <p class="hero__now-company">{profile.company}</p>
+          <p class="hero__now-meta">{profile.location.replace(', India', '')} · {profile.workMode}</p>
+          <p class="hero__now-since mono">Since {profile.startDate}</p>
+        </aside>
+      </div>
+    </div>
+
+    <nav class="system-index" aria-labelledby="system-index-title" data-animate style="--delay: 320ms">
+      <div class="system-index__head">
+        <p id="system-index-title" class="eyebrow">Systems I’ve built</p>
+        <p class="system-index__count mono">{String(projects.length).padStart(2, '0')} · {profile.company}</p>
+      </div>
+      <ul class="system-index__grid" role="list">
+        {
+          projects.map((p, i) => (
+            <li style={`--i: ${i}`}>
+              <a class="system-index__item" href={`/projects/${p.slug}`}>
+                <span class="system-index__num mono" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span class="system-index__text">
+                  <span class="system-index__name">{p.name}</span>
+                  <span class="system-index__cat mono">{p.category}</span>
+                </span>
+                <Icon name="arrow-up-right" size={15} class="system-index__arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<style>
+  /* ───────────── Section & backdrop ───────────── */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: clamp(2rem, 1rem + 4vw, 5rem) clamp(2.5rem, 1.5rem + 3vw, 4rem);
+    /* Clip sideways bleed of the cutout; allow it to overlap the next section vertically. */
+    overflow-x: clip;
+  }
+
+  .hero__backdrop {
+    position: absolute;
+    inset: 0 0 -12% 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: center top;
+    mask-image: radial-gradient(ellipse 85% 70% at 60% 40%, #000 30%, transparent 85%);
+  }
+
+  /* Phones/tablets: copy → photo → system index. Desktop: copy and index on the left, photo spanning both rows. */
+  .hero__grid {
+    display: grid;
+    gap: clamp(2rem, 1rem + 3vw, 3rem);
+    grid-template-columns: 1fr;
+    grid-template-areas: 'copy' 'media' 'index';
+  }
+
+  .hero__copy {
+    grid-area: copy;
+  }
+
+  .hero__media {
+    grid-area: media;
+  }
+
+  .system-index {
+    grid-area: index;
+  }
+
+  @media (min-width: 1100px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      grid-template-rows: auto auto;
+      grid-template-areas: 'copy media' 'index media';
+      row-gap: var(--space-8);
+    }
+
+    .hero__copy {
+      align-self: end;
+    }
+
+    .system-index {
+      align-self: start;
+    }
+
+    .hero__media {
+      align-self: center;
+    }
+  }
+
+  /* ───────────── Copy ───────────── */
+  .hero__copy {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: var(--space-5);
+    min-width: 0;
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: start;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--surface-1);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .hero__title {
+    font-size: clamp(2.6rem, 1.6rem + 3.6vw, 4.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    font-weight: 780;
+  }
+
+  .hero__role {
+    margin-top: calc(var(--space-2) * -1);
+    font-size: clamp(0.95rem, 0.85rem + 0.4vw, 1.15rem);
+    color: var(--accent);
+    letter-spacing: 0.01em;
+  }
+
+  .hero__statement {
+    max-width: 50ch;
+    font-size: var(--text-lg);
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  /* ───────────── System index (miniature index, not cards) ───────────── */
+  .system-index {
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--surface-1) 80%, transparent);
+    overflow: hidden;
+  }
+
+  .system-index__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .system-index__count {
+    font-size: 0.68rem;
+    color: var(--text-subtle);
+  }
+
+  /* Hairline dividers come from the 1px gap over the border-coloured background. */
+  .system-index__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--border-subtle);
+    list-style: none;
+    padding: 0;
+  }
+
+  .system-index__grid > li {
+    display: flex;
+    background: var(--surface-1);
+    animation: fade-in var(--dur-slow) var(--ease-out) both;
+    animation-delay: calc(420ms + var(--i) * 70ms);
+  }
+
+  .system-index__item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    transition: background-color var(--dur) var(--ease-out);
+  }
+
+  .system-index__item:focus-visible {
+    border-radius: 0;
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+
+  .system-index__num {
+    padding-top: 2px;
+    font-size: 0.68rem;
+    color: var(--text-subtle);
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .system-index__text {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .system-index__name {
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+
+  .system-index__cat {
+    font-size: 0.68rem;
+    color: var(--text-subtle);
+  }
+
+  .system-index__item :global(.system-index__arrow) {
+    margin-left: auto;
+    flex: none;
+    color: var(--text-subtle);
+    opacity: 0;
+    transform: translate(-3px, 3px);
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out);
+  }
+
+  .system-index__item:hover,
+  .system-index__item:focus-visible {
+    background: var(--surface-2);
+  }
+
+  .system-index__item:hover .system-index__num,
+  .system-index__item:focus-visible .system-index__num {
+    color: var(--accent);
+  }
+
+  .system-index__item:hover :global(.system-index__arrow),
+  .system-index__item:focus-visible :global(.system-index__arrow) {
+    opacity: 1;
+    transform: none;
+    color: var(--accent);
+  }
+
+  /* ───────────── Visual: cutout stage ───────────── */
+  .hero__media {
+    container-type: inline-size;
+    min-width: 0;
+  }
+
+  /*
+   * Geometry (all derived from --person-h):
+   *   cutout aspect  = 790 / 1118 = 0.7066
+   *   fingertip      = 98.86% x, 49.78% y of the cutout
+   * Stage = person + gap + card. The person is sized so the stage fits the column
+   * (+ a small bleed to the left and, on wide screens, an overhang into the page margin).
+   */
+  .hero__stage {
+    --ratio: 0.7066;
+    --card-w: 212px;
+    --gap: 30px;
+    --bleed: 36px;
+    --overhang: clamp(0px, calc((100vw - 1264px) / 2), 88px);
+    --person-h: clamp(
+      430px,
+      min(calc((100cqw + var(--bleed) + var(--overhang) - var(--gap) - var(--card-w)) / var(--ratio)), 86svh),
+      700px
+    );
+    --person-w: calc(var(--person-h) * var(--ratio));
+    --stage-w: calc(var(--person-w) + var(--gap) + var(--card-w));
+    --room: calc(100cqw + var(--overhang) - var(--stage-w));
+
+    position: relative;
+    width: var(--stage-w);
+    /* The cutout extends 8% below the stage and fades into the next section. */
+    height: calc(var(--person-h) * 0.92);
+    /* Centre when there is room; otherwise anchor right and let the body bleed left. */
+    margin-left: min(var(--room), calc(var(--room) / 2));
+  }
+
+  .hero__person {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    width: var(--person-w);
+    height: var(--person-h);
+    animation: person-in 700ms var(--ease-out) both;
+    animation-delay: 80ms;
+  }
+
+  .hero__person :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Soften only the hard crop edge at the bottom of the original photograph. */
+    mask-image: linear-gradient(to bottom, #000 80%, transparent 99%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 99%);
+    /* No filter here: drop-shadow combined with the mask renders a visible rectangle in Chrome. */
+  }
+
+  /* Soft light and a thin orbit behind head and shoulders: depth without neon. */
+  .hero__halo {
+    position: absolute;
+    z-index: 0;
+    left: calc(var(--person-w) * 0.46 - var(--person-w) * 0.62);
+    top: calc(var(--person-h) * 0.3 - var(--person-w) * 0.62);
+    width: calc(var(--person-w) * 1.24);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, var(--backdrop-glow) 0%, transparent 62%);
+    animation: fade-in 900ms var(--ease-out) both;
+  }
+
+  .hero__orbit {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .hero__orbit-ring {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 0.4;
+  }
+
+  .hero__orbit-ring--inner {
+    stroke: var(--border-subtle);
+    stroke-dasharray: 1.5 3;
+  }
+
+  .hero__orbit-node {
+    fill: var(--text-subtle);
+    opacity: 0.6;
+  }
+
+  .hero__orbit-node--live {
+    fill: var(--accent);
+    opacity: 1;
+  }
+
+  /* Hairline from just beyond the fingertip to the card: makes the gesture's target explicit. */
+  .hero__pointer {
+    position: absolute;
+    z-index: 1;
+    left: calc(var(--person-w) * 0.9886 + 8px);
+    top: calc(var(--person-h) * 0.4978 - 6px);
+    width: calc(var(--gap) + var(--person-w) * 0.0114 - 8px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-line));
+    transform-origin: left center;
+    transform: rotate(-12deg);
+    animation: fade-in 500ms var(--ease-out) both;
+    animation-delay: 620ms;
+  }
+
+  .hero__now {
+    position: absolute;
+    z-index: 2;
+    left: calc(var(--person-w) + var(--gap));
+    top: calc(var(--person-h) * 0.4978);
+    width: var(--card-w);
+    display: grid;
+    gap: 2px;
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-78%);
+    animation: card-in 600ms var(--ease-out) both;
+    animation-delay: 520ms;
+  }
+
+  .hero__now::before {
+    /* Accent edge on the side the finger points at. */
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 22%;
+    bottom: 22%;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  .hero__now-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    font-size: 0.66rem;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-subtle);
+  }
+
+  .hero__now-role {
+    font-weight: 750;
+    font-size: var(--text-md);
+    line-height: 1.25;
+  }
+
+  .hero__now-company {
+    font-weight: 650;
+    color: var(--accent);
+    line-height: 1.3;
+  }
+
+  .hero__now-meta {
+    margin-top: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+
+  .hero__now-since {
+    font-size: 0.66rem;
+    color: var(--text-subtle);
+  }
+
+  @keyframes person-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes card-in {
+    from {
+      opacity: 0;
+      transform: translateY(calc(-78% + 12px));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-78%);
+    }
+  }
+
+  /* ───────────── Stacked layouts (tablet & phone) ───────────── */
+  @media (max-width: 1099px) {
+    .hero__stage {
+      --card-w: clamp(136px, 36cqw, 200px);
+      --gap: clamp(12px, 3cqw, 24px);
+      --bleed: clamp(0px, calc(560px - 100cqw), 72px);
+      --overhang: 0px;
+      --person-h: clamp(330px, calc((100cqw + var(--bleed) - var(--gap) - var(--card-w)) / var(--ratio)), 540px);
+    }
+
+    .hero__now {
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .hero__now-role {
+      font-size: var(--text-base);
+    }
+
+    .hero__now-company {
+      font-size: var(--text-sm);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero__now-since {
+      display: none;
+    }
+
+    .system-index__item {
+      padding: var(--space-3);
+    }
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+const groups = [
+  { title:'AI / GenAI', items:['Google Gemini 2.5 Flash','LangGraph','Structured extraction','Human-in-the-loop','Deterministic fallbacks'] },
+  { title:'Document AI & ML', items:['RapidOCR','PaddleOCR','OpenCV','NLP classification','Similarity matching','Scikit-learn'] },
+  { title:'Data & Analytics', items:['Python','Pandas','NumPy','SQL','Financial analysis','ETL & reconciliation'] },
+  { title:'Engineering', items:['FastAPI','Pydantic','TypeScript','REST & WebSockets','Playwright','Pytest','GitHub Actions'] },
+];
+---
+<section class="section skills" id="skills" aria-labelledby="skills-heading"><div class="container"><header class="section-head"><p class="eyebrow">Capabilities</p><h2 id="skills-heading">Skills demonstrated in working systems.</h2><p class="lead">Grouped by how they are used—not scored with arbitrary percentages.</p></header><div class="skills__grid">{groups.map((group) => <article class="card skill-group"><h3>{group.title}</h3><ul role="list">{group.items.map((item) => <li class="chip">{item}</li>)}</ul></article>)}</div></div></section>
+<section class="section research" id="research" aria-labelledby="research-heading"><div class="container"><article class="research__card card"><div><p class="eyebrow">Research · Under peer review</p><h2 id="research-heading">Advanced Image Captioning and Visual Question Answering: Performance Evaluation and Future Directions</h2></div><dl><div><dt>Authors</dt><dd>Mihir Brahmaniya · Dhruv Makwana · Asha Kurian</dd></div><div><dt>Status</dt><dd><span class="status-dot" data-status="review"></span> Under peer review</dd></div></dl></article></div></section>
+<style>
+  .skills{border-top:1px solid var(--border-subtle)}.skills__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4)}.skill-group{padding:var(--space-5)}.skill-group h3{margin-bottom:var(--space-4);font-size:var(--text-md)}.skill-group ul{display:flex;flex-wrap:wrap;gap:var(--space-2);padding:0}.research{padding-top:0}.research__card{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(16rem,.5fr);gap:var(--space-10);padding:clamp(1.5rem,1rem + 2vw,3rem);background:radial-gradient(30rem 15rem at 0 0,var(--ai-soft),transparent 70%),var(--surface-1)}.research h2{margin-top:var(--space-4);font-size:var(--text-xl);max-width:28ch}.research dl{display:grid;align-content:center;gap:var(--space-4)}.research dt{font:500 .67rem var(--font-mono);color:var(--text-subtle);text-transform:uppercase}.research dd{margin:0;color:var(--text-muted)}.research dd .status-dot{margin-right:.4rem}@media(max-width:700px){.skills__grid,.research__card{grid-template-columns:1fr}}
+</style>

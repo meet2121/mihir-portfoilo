@@ -1,0 +1,180 @@
+---
+import Icon from '../ui/Icon.astro';
+import PipelinePreview from './PipelinePreview.astro';
+import type { Project } from '../../data/projects';
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const isFlagship = project.tier === 'flagship';
+const headingId = `project-${project.slug}-title`;
+---
+
+<article
+  class:list={['card', 'project-card', { 'project-card--flagship': isFlagship }]}
+  aria-labelledby={headingId}
+  id={`card-${project.slug}`}
+>
+  <div class="project-card__body">
+    <div class="project-card__meta">
+      <span class="mono project-card__index">{String(index + 1).padStart(2, '0')}</span>
+      <span class="chip chip--accent">{project.category}</span>
+      {isFlagship && <span class="chip">Flagship</span>}
+    </div>
+
+    <h3 id={headingId} class="project-card__title">{project.name}</h3>
+    <p class="project-card__desc">{project.shortDescription}</p>
+
+    <p class="project-card__capability">
+      <Icon name="spark" size={16} />
+      <span>{project.keyCapability}</span>
+    </p>
+
+    <ul class="project-card__tech" role="list" aria-label="Core technologies">
+      {project.coreTech.map((t) => <li class="chip">{t}</li>)}
+    </ul>
+
+    <div class="project-card__actions">
+      <a class="btn btn--primary btn--sm" href={`/projects/${project.slug}`}>
+        Explore Case Study
+        <Icon name="arrow-right" nudge />
+        <span class="visually-hidden">: {project.name}</span>
+      </a>
+      <a class="btn btn--sm" href={`/projects/${project.slug}#demo`}>
+        <Icon name="play" size={14} />
+        Try Demo
+        <span class="visually-hidden">: {project.name}</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="project-card__visual">
+    {
+      project.media?.length ? (
+        <img src={project.media[0].src} alt={project.media[0].alt} loading="lazy" decoding="async" />
+      ) : (
+        <div class="project-card__pipeline">
+          <p class="eyebrow">System pipeline</p>
+          <PipelinePreview stages={project.pipeline} label={`${project.name} pipeline`} compact={!isFlagship} />
+        </div>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: grid;
+    overflow: hidden;
+  }
+
+  .project-card__body {
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+    padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+  }
+
+  .project-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .project-card__index {
+    font-size: var(--text-xs);
+    color: var(--text-subtle);
+    margin-right: var(--space-1);
+  }
+
+  .project-card__title {
+    font-size: var(--text-xl);
+    line-height: 1.15;
+  }
+
+  .project-card__desc {
+    color: var(--text-muted);
+  }
+
+  .project-card__capability {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border-subtle);
+    border-left: 2px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+
+  .project-card__capability :global(svg) {
+    flex: none;
+    margin-top: 3px;
+    color: var(--accent);
+  }
+
+  .project-card__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+  }
+
+  .project-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .project-card__visual {
+    border-top: 1px solid var(--border-subtle);
+    background:
+      radial-gradient(28rem 12rem at 20% 0%, var(--backdrop-glow), transparent 70%),
+      var(--bg-elevated);
+  }
+
+  .project-card__visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-card__pipeline {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-5) clamp(1.25rem, 1rem + 1vw, 2rem);
+  }
+
+  /* Flagship: split layout from tablet up, pipeline gets real estate. */
+  @media (min-width: 900px) {
+    .project-card--flagship {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    }
+
+    .project-card--flagship .project-card__title {
+      font-size: var(--text-2xl);
+    }
+
+    .project-card--flagship .project-card__visual {
+      display: grid;
+      align-items: center;
+      border-top: 0;
+      border-left: 1px solid var(--border-subtle);
+    }
+  }
+
+  .project-card:not(.project-card--flagship) .project-card__visual {
+    margin-top: auto;
+  }
+
+  .project-card:not(.project-card--flagship) {
+    grid-template-rows: 1fr auto;
+  }
+</style>

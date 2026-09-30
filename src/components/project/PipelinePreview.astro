@@ -1,0 +1,103 @@
+---
+// Static, accessible pipeline preview. Phase 3 replaces the presentation with the
+// animated 2.5D pipeline (click-to-inspect); the data contract (PipelineStage[]) stays the same.
+import type { PipelineStage } from '../../data/projects';
+
+interface Props {
+  stages: PipelineStage[];
+  label: string;
+  compact?: boolean;
+}
+
+const { stages, label, compact = false } = Astro.props;
+---
+
+<ol class:list={['pipeline-preview', { 'pipeline-preview--compact': compact }]} aria-label={label}>
+  {
+    stages.map((s, i) => (
+      <li class="pipeline-preview__item" data-kind={s.kind}>
+        {i > 0 && (
+          <span class="pipeline-preview__arrow" aria-hidden="true">
+            →
+          </span>
+        )}
+        <span class="pipeline-preview__stage">
+          <span class="pipeline-preview__index mono" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <span class="pipeline-preview__label">{s.label}</span>
+        </span>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .pipeline-preview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-2);
+    list-style: none;
+    padding: 0;
+  }
+
+  /* Arrow and stage stay together, so a wrapped line reads "→ Stage" rather than a dangling connector. */
+  .pipeline-preview__item {
+    --node-color: var(--text-subtle);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .pipeline-preview__arrow {
+    color: var(--text-subtle);
+    font-size: var(--text-xs);
+  }
+
+  .pipeline-preview__stage {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: 32px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--surface-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .pipeline-preview__index {
+    color: var(--node-color);
+    font-size: 0.65rem;
+  }
+
+  [data-kind='process'] {
+    --node-color: var(--accent);
+  }
+  [data-kind='ai'] {
+    --node-color: var(--ai);
+  }
+  [data-kind='ai'] .pipeline-preview__stage {
+    border-color: color-mix(in srgb, var(--ai) 35%, transparent);
+  }
+  [data-kind='validate'] {
+    --node-color: var(--ok);
+  }
+  [data-kind='human'] {
+    --node-color: var(--review);
+  }
+  [data-kind='output'] {
+    --node-color: var(--accent);
+  }
+  [data-kind='output'] .pipeline-preview__stage {
+    border-color: var(--accent-line);
+  }
+
+  .pipeline-preview--compact .pipeline-preview__stage {
+    height: 28px;
+  }
+</style>

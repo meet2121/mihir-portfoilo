@@ -1,0 +1,38 @@
+---
+import Icon from '../ui/Icon.astro';
+---
+
+<button class="btn btn--ghost btn--icon theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+  <span class="visually-hidden">Light theme</span>
+  <span class="theme-toggle__to-light" aria-hidden="true"><Icon name="sun" size={18} /></span>
+  <span class="theme-toggle__to-dark" aria-hidden="true"><Icon name="moon" size={18} /></span>
+</button>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const root = document.documentElement;
+  const sync = () => btn?.setAttribute('aria-pressed', String(root.dataset.theme === 'light'));
+  sync();
+  btn?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch (_) {}
+    sync();
+  });
+</script>
+
+<style>
+  .theme-toggle__to-dark {
+    display: none;
+  }
+
+  :global(:root[data-theme='light']) .theme-toggle__to-light {
+    display: none;
+  }
+
+  :global(:root[data-theme='light']) .theme-toggle__to-dark {
+    display: inline;
+  }
+</style>

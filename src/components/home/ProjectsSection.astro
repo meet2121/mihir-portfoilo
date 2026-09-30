@@ -1,0 +1,74 @@
+---
+import ProjectCard from '../project/ProjectCard.astro';
+import Icon from '../ui/Icon.astro';
+import { projects } from '../../data/projects';
+
+const [flagship, ...featured] = projects;
+---
+
+<section class="section projects" id="projects" aria-labelledby="projects-heading">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow"><span class="status-dot" data-status="live"></span> Industry projects · NoBrokerHood</p>
+      <h2 id="projects-heading">Four systems, designed and implemented end-to-end.</h2>
+      <p class="lead">
+        Each project solved a real accounting or data problem. Each one gets a small interactive demo that runs in
+        your browser on synthetic data, so you can try the core idea yourself.
+      </p>
+    </header>
+
+    <div class="projects__grid">
+      <div class="projects__flagship">
+        <ProjectCard project={flagship} index={0} />
+      </div>
+      {featured.map((p, i) => <ProjectCard project={p} index={i + 1} />)}
+    </div>
+
+    <p class="projects__note">
+      <Icon name="lock" size={14} />
+      Enterprise work: production systems, company data and proprietary details are not exposed. Demos are simplified,
+      synthetic representations.
+    </p>
+  </div>
+</section>
+
+<style>
+  .projects__grid {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) and (max-width: 1099px) {
+    .projects__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .projects__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .projects__flagship {
+    grid-column: 1 / -1;
+  }
+
+  .projects__flagship > :global(.card) {
+    height: 100%;
+  }
+
+  .projects__note {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-8);
+    color: var(--text-subtle);
+    font-size: var(--text-sm);
+  }
+
+  .projects__note :global(svg) {
+    flex: none;
+  }
+</style>

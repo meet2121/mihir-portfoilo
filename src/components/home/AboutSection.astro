@@ -1,0 +1,344 @@
+---
+import { Picture } from 'astro:assets';
+import { profile } from '../../data/profile';
+import { projects } from '../../data/projects';
+// Derived transparent cutout of the second portrait (original untouched).
+import aboutCutout from '@assets/profile/processed/about-cutout.png';
+
+// One-line contributions, from portfolio-content.md §4.
+const contributions: Record<string, string> = {
+  'accounting-ai':
+    'Document-intelligence pipeline: multi-engine OCR, contract-based Gemini extraction, LangGraph orchestration, deterministic reconciliation and human review.',
+  'finsight-ai':
+    'Financial-statement analysis: statement detection, account classification, accounting-equation and rule-based checks, materiality-aware variance and risk scoring.',
+  'ledger-flash':
+    'Two-stage ledger classification that reuses reviewer-confirmed decisions and sends only novel transactions to Gemini in resilient batches.',
+  scrapeforge:
+    'Playwright-based extraction of multi-year reports from legacy ERPs with checkpointing and count validation, plus reconciliation and a readiness grade.',
+};
+---
+
+<section class="section about" id="experience" aria-labelledby="about-heading">
+  <div class="container about__grid">
+    <div class="about__copy">
+      <header class="about__head">
+        <p class="eyebrow"><span class="status-dot" data-status="live"></span> About · Experience</p>
+        <h2 id="about-heading">I design and build AI systems for accounting workflows where the numbers have to be right.</h2>
+        <p class="lead">
+          At NoBrokerHood I work with the Accounts team. I take each system from the problem to a working tool: AI logic,
+          backend, frontend, data processing and automation. I build in evidence, validation and human review so that
+          uncertainty is visible rather than hidden.
+        </p>
+      </header>
+
+      <article class="role" aria-labelledby="role-title">
+        <div class="role__top">
+          <div>
+            <h3 id="role-title" class="role__title">{profile.role}</h3>
+            <p class="role__company">{profile.company} · Accounts team</p>
+          </div>
+          <p class="role__dates mono">{profile.startDate} – Present</p>
+        </div>
+        <p class="role__meta">{profile.location} · {profile.workMode}</p>
+
+        <ol class="role__list" role="list">
+          {
+            projects.map((p, i) => (
+              <li>
+                <span class="role__num mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <p>
+                  <a href={`/projects/${p.slug}`}>{p.name}</a>
+                  <span class="muted"> · {contributions[p.slug]}</span>
+                </p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <p class="role__note">
+          Designed and implemented end-to-end. AI coding and research assistants are part of my workflow; the system
+          design, integration and debugging decisions are mine.
+        </p>
+      </article>
+
+      <dl class="education">
+        <div>
+          <dt class="mono">M.Sc. Data Science</dt>
+          <dd>Alliance University, Bengaluru · 2024 – 2026</dd>
+        </div>
+        <div>
+          <dt class="mono">BCA</dt>
+          <dd>Gujarat University · 2021 – 2024</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Seated cutout rising out of a data panel: a quieter treatment than the hero. -->
+    <div class="about__visual">
+      <div class="about__stage">
+        <div class="about__frame" aria-hidden="true"></div>
+        <div class="about__person">
+          <Picture
+            src={aboutCutout}
+            alt={profile.name}
+            formats={['avif', 'webp']}
+            fallbackFormat="png"
+            quality={80}
+            widths={[360, 520, 760]}
+            sizes="(min-width: 1000px) 440px, 88vw"
+            loading="lazy"
+          />
+        </div>
+        <dl class="about__panel glass">
+          <div><dt>role</dt><dd>{profile.role}</dd></div>
+          <div><dt>team</dt><dd>Accounts</dd></div>
+          <div><dt>focus</dt><dd>Document &amp; Financial AI</dd></div>
+          <div class="about__panel-edu"><dt>study</dt><dd>M.Sc. Data Science</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    position: relative;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .about__grid {
+    display: grid;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  @media (min-width: 1000px) {
+    .about__grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--space-16);
+      align-items: start;
+    }
+
+    /* Keeps the portrait beside the text while the experience list scrolls. */
+    .about__visual {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-12));
+      margin-top: var(--space-16);
+    }
+  }
+
+  .about__copy {
+    display: grid;
+    gap: var(--space-8);
+    min-width: 0;
+  }
+
+  .about__head {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .about__head h2 {
+    font-size: var(--text-2xl);
+    line-height: 1.15;
+    max-width: 22ch;
+  }
+
+  .role {
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    background: var(--surface-1);
+  }
+
+  .role__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-4);
+  }
+
+  .role__title {
+    font-size: var(--text-lg);
+  }
+
+  .role__company {
+    color: var(--accent);
+    font-weight: 650;
+  }
+
+  .role__dates {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+
+  .role__meta {
+    margin-top: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--text-subtle);
+  }
+
+  .role__list {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+    padding: var(--space-5) 0 0;
+    border-top: 1px solid var(--border-subtle);
+    list-style: none;
+  }
+
+  .role__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+
+  .role__num {
+    padding-top: 3px;
+    font-size: 0.68rem;
+    color: var(--text-subtle);
+  }
+
+  .role__list a {
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--dur) var(--ease-out);
+  }
+
+  .role__list a:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .role__note {
+    margin-top: var(--space-5);
+    font-size: var(--text-xs);
+    color: var(--text-subtle);
+  }
+
+  .education {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 640px) {
+    .education {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .education div {
+    padding: var(--space-3) var(--space-4);
+    border-left: 2px solid var(--border);
+  }
+
+  .education dt {
+    font-size: var(--text-xs);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .education dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  /* ───────────── Visual ───────────── */
+  .about__visual {
+    container-type: inline-size;
+    justify-self: center;
+    width: min(100%, 480px);
+  }
+
+  /* Cutout 1027×1115 (ratio 0.921). Empty region right of the head: x ≥ 62%, y ≤ 36%. */
+  .about__stage {
+    --img-w: 92cqw;
+    --img-h: calc(var(--img-w) / 0.921);
+    position: relative;
+    height: var(--img-h);
+  }
+
+  .about__frame {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(var(--img-h) * 0.3);
+    bottom: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(70% 60% at 45% 20%, var(--backdrop-glow), transparent 70%),
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 32px 32px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 32px 32px,
+      var(--surface-1);
+    box-shadow: var(--shadow);
+  }
+
+  .about__person {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: var(--img-w);
+    height: var(--img-h);
+  }
+
+  .about__person :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* The original is cropped at the bottom; blend that edge into the panel. */
+    mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
+  }
+
+  .about__panel {
+    position: absolute;
+    top: calc(var(--img-h) * 0.04);
+    left: calc(var(--img-w) * 0.64);
+    right: 0;
+    display: grid;
+    gap: 6px;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    font-size: var(--text-xs);
+  }
+
+  .about__panel div {
+    display: grid;
+    gap: 0;
+  }
+
+  .about__panel dt {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-subtle);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .about__panel dd {
+    margin: 0;
+    font-weight: 650;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  @media (max-width: 480px) {
+    .about__panel .about__panel-edu {
+      display: none;
+    }
+
+    .about__panel {
+      gap: 4px;
+      padding: var(--space-2) var(--space-3);
+    }
+  }
+</style>

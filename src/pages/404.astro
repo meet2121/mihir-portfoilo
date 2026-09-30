@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<BaseLayout title="Page not found">
+  <section class="section not-found">
+    <div class="container container--narrow">
+      <div class="card not-found__panel">
+        <p class="eyebrow mono"><span class="status-dot" data-status="fail"></span> 404 · system not found</p>
+        <p class="not-found__code mono" aria-hidden="true">ERR_ROUTE_UNRESOLVED</p>
+        <h1>That route isn’t part of this system.</h1>
+        <p class="lead">The requested project or page does not exist. Return to the portfolio or continue with the industry projects.</p>
+        <div class="cluster">
+          <a class="btn btn--primary" href="/">Back to portfolio <Icon name="arrow-right" nudge /></a>
+          <a class="btn" href="/#projects">View projects</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found{min-height:65vh;display:grid;align-items:center;background:radial-gradient(32rem 18rem at 50% 30%,var(--backdrop-glow),transparent 75%)}
+  .not-found__panel{display:grid;gap:var(--space-5);padding:clamp(1.5rem,1rem + 3vw,3.5rem);background:linear-gradient(var(--grid-line) 1px,transparent 1px) 0 0/30px 30px,linear-gradient(90deg,var(--grid-line) 1px,transparent 1px) 0 0/30px 30px,var(--surface-1)}
+  .not-found__code{width:max-content;padding:.35rem .55rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);color:var(--review);font-size:var(--text-xs)}
+  .not-found h1{font-size:var(--text-2xl);max-width:18ch}
+</style>

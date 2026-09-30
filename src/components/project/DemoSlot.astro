@@ -1,0 +1,88 @@
+---
+// Mount point for a project's interactive demo (Preact island, loaded on demand).
+// Phases 4–7 replace the placeholder body with the real demo; the anchor (#demo),
+// badge legend and confidentiality note stay.
+import Icon from '../ui/Icon.astro';
+import DemoApp from '../demos/DemoApp';
+import { CONFIDENTIALITY_NOTE } from '../../data/projects';
+
+interface Props {
+  projectName: string;
+  focus: string;
+  slug: 'accounting-ai' | 'finsight-ai' | 'ledger-flash' | 'scrapeforge';
+}
+
+const { projectName, focus, slug } = Astro.props;
+---
+
+<section class="demo-slot card" id="demo" aria-labelledby="demo-heading">
+  <header class="demo-slot__head">
+    <p class="eyebrow">Try the demo</p>
+    <h2 id="demo-heading">{projectName}: interactive demo</h2>
+    <p class="muted">{focus}</p>
+    <ul class="demo-slot__legend" role="list" aria-label="Demo badge legend">
+      <li class="chip chip--accent">Computed</li>
+      <li class="chip">Simulated visual</li>
+      <li class="chip chip--ai">Local model</li>
+    </ul>
+  </header>
+
+  <div class="demo-slot__stage" data-demo-mount>
+    <DemoApp slug={slug} client:visible />
+  </div>
+
+  <p class="demo-slot__note">
+    <Icon name="lock" size={14} />
+    {CONFIDENTIALITY_NOTE}
+  </p>
+</section>
+
+<style>
+  .demo-slot {
+    display: grid;
+    gap: var(--space-6);
+    padding: clamp(1.25rem, 1rem + 1.5vw, 2.5rem);
+  }
+
+  .demo-slot__head {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .demo-slot__head h2 {
+    font-size: var(--text-xl);
+  }
+
+  .demo-slot__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+  }
+
+  .demo-slot__stage {
+    display: grid;
+    min-height: 260px;
+    padding: clamp(.75rem, .5rem + 1vw, 1.5rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    background:
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 28px 28px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 28px 28px,
+      var(--bg-elevated);
+    color: var(--text);
+  }
+
+  .demo-slot__note {
+    display: flex;
+    gap: var(--space-2);
+    color: var(--text-subtle);
+    font-size: var(--text-sm);
+  }
+
+  .demo-slot__note :global(svg) {
+    flex: none;
+    margin-top: 4px;
+  }
+</style>
